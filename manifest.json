@@ -55,6 +55,8 @@
         "src/lib/column_config.js",
         "src/engine/executor.js",
         "src/engine/executor_inject.js",
+        "src/engine/react_state_discovery.js",
+        "src/engine/metadata_registry.js",
         "src/engine/schema_discovery.js",
         "src/engine/schema_compare.js",
         "src/engine/schema_autofill.js",

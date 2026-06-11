@@ -487,7 +487,10 @@ async function doScan() {
     });
 
     await saveQuizSchema(schema);
-    setScanStatus(`✅ ${schema.questions?.length || 0} pertanyaan berhasil di-scan!`, '#10b981');
+    const srcLabel = res.source === 'react-state' ? 'Metadata Form Builder (React state)'
+                   : res.source === 'dom+meta'    ? 'DOM + metadata tersimpan'
+                   : 'DOM (fallback)';
+    setScanStatus(`✅ ${schema.questions?.length || 0} pertanyaan di-scan via ${srcLabel}!`, '#10b981');
 
     renderQuizSidebar();
     setTimeout(() => {
