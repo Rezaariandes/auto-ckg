@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CKG Auto KlikPro — Template Builder</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <img src="icons/icon48.png" alt="CKG" class="logo-img" onerror="this.style.display='none'">
+        <div>
+          <div class="brand">CKG Auto<span class="brand-pro">KlikPro</span></div>
+          <div class="brand-sub">Template Builder</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Workflow list (rendered by JS) -->
+    <nav class="wf-nav" id="wfNav">
+      <div class="nav-label">
+        Workflow
+        <button class="nav-label-btn" id="btnAddWorkflow" title="Tambah workflow baru">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+      </div>
+      <!-- wf-btn items injected here by renderSidebar() -->
+    </nav>
+
+    <!-- Marketplace nav -->
+    <nav class="wf-nav" id="marketplaceNav">
+      <div class="nav-label">Temukan Template</div>
+      <button class="wf-btn" id="btnMarketplace" data-view="marketplace">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="wf-btn-label">📦 Marketplace</span>
+      </button>
+    </nav>
+
+    <!-- Sidebar actions -->
+    <div class="sidebar-actions">
+      <div class="nav-label">Template</div>
+      <button class="action-btn" id="btnImport">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Import JSON
+      </button>
+      <input type="file" id="importInput" accept=".json" hidden>
+      <button class="action-btn accent" id="btnImportRecorder" title="Import dari file rekaman klik/input">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>
+        Import Recorder
+      </button>
+      <input type="file" id="recorderInput" accept=".json" hidden>
+      <button class="action-btn" id="btnExport">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Export JSON
+      </button>
+      <button class="action-btn danger" id="btnResetDefault">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.56"/></svg>
+        Reset Default
+      </button>
+    </div>
+
+    <footer class="sidebar-footer">
+      <a href="https://klikpro-id.vercel.app" target="_blank" class="footer-link">KlikPro</a>
+      <span>·</span>
+      <span>v1.1.0</span>
+    </footer>
+  </aside>
+
+  <!-- Main content -->
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <h1 class="page-title" id="pageTitle">Pendaftaran</h1>
+        <span class="step-count" id="stepCount">0 steps</span>
+        <!-- Toggle List / Flow (hanya tampil saat view workflow) -->
+        <div class="view-toggle" id="viewToggle">
+          <button class="view-toggle-btn active" id="btnViewList" title="Tampilan daftar">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            List
+          </button>
+          <button class="view-toggle-btn" id="btnViewFlow" title="Tampilan flowchart">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="5" rx="1"/><rect x="14" y="8" width="7" height="5" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/><path d="M6.5 8v2.5H17.5V13"/><path d="M6.5 16v-5.5"/></svg>
+            Flow
+          </button>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <!-- Mode toggle: Beginner / Expert -->
+        <div class="mode-toggle-wrap" id="modeToggleWrap" title="Ganti mode tampilan form">
+          <span class="mode-label active" id="modeLabelBeginner">Beginner</span>
+          <button class="mode-toggle-track" id="modeToggle" role="switch" aria-checked="false" aria-label="Toggle mode Expert">
+            <span class="mode-toggle-thumb"></span>
+          </button>
+          <span class="mode-label" id="modeLabelExpert">Expert</span>
+        </div>
+        <!-- Tombol rekam -->
+        <button class="btn btn-record" id="btnRecord">
+          <span class="record-dot"></span>
+          Mulai Rekam
+        </button>
+        <button class="btn btn-record-stop hidden" id="btnStopRecord">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+          Stop Rekam
+          <span class="record-count" id="recordCount">0</span>
+        </button>
+        <button class="btn btn-ghost" id="btnPreviewJSON">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          Preview JSON
+        </button>
+        <button class="btn btn-primary" id="btnAddStep">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 5v14M5 12h14"/></svg>
+          Tambah Step
+        </button>
+      </div>
+    </div>
+
+    <div class="toast hidden" id="toast"></div>
+
+    <div class="step-list" id="stepList">
+      <div class="empty-state" id="emptyState">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="15" x2="12" y2="15"/></svg>
+        <p>Belum ada step. Klik <strong>Tambah Step</strong> atau <strong>Import JSON</strong>.</p>
+      </div>
+    </div>
+
+    <!-- Flow view (hidden by default) -->
+    <div class="flow-list hidden" id="flowList"></div>
+
+    <!-- Marketplace Panel (hidden by default) -->
+    <div class="marketplace-panel hidden" id="marketplacePanel">
+      <div class="marketplace-header">
+        <div>
+          <h2 class="marketplace-title">📦 Template Marketplace</h2>
+          <p class="marketplace-sub">Template resmi KlikPro, siap pakai — klik Gunakan untuk import ke workflow aktif</p>
+        </div>
+      </div>
+      <div class="marketplace-grid" id="marketplaceGrid">
+        <!-- kartu dirender oleh JS -->
+      </div>
+    </div>
+  </main>
+
+  <!-- Step Editor Modal -->
+  <div class="modal-backdrop hidden" id="modalBackdrop">
+    <div class="modal" id="modal">
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title" id="modalTitle">Tambah Step</h2>
+          <p class="modal-subtitle" id="modalSubtitle">Pilih jenis aksi yang ingin dilakukan</p>
+        </div>
+        <button class="modal-close" id="modalClose">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="field-group">
+          <label class="field-label">
+            <span class="step-badge-num">1</span>
+            Jenis Aksi
+            <span class="field-required">*</span>
+          </label>
+          <div class="type-grid" id="typeGrid">
+            <button class="type-card active" data-type="click">
+              <div class="type-card-icon">👆</div>
+              <div class="type-card-text">
+                <div class="type-card-name">Klik Tombol</div>
+                <div class="type-card-desc">Klik tombol, link, atau elemen di halaman</div>
+              </div>
+            </button>
+            <button class="type-card" data-type="type">
+              <div class="type-card-icon">⌨️</div>
+              <div class="type-card-text">
+                <div class="type-card-name">Ketik Teks</div>
+                <div class="type-card-desc">Mengisi kolom input dengan teks atau data pasien</div>
+              </div>
+            </button>
+            <button class="type-card" data-type="select">
+              <div class="type-card-icon">📋</div>
+              <div class="type-card-text">
+                <div class="type-card-name">Pilih Dropdown</div>
+                <div class="type-card-desc">Memilih opsi dari daftar pilihan</div>
+              </div>
+            </button>
+            <button class="type-card" data-type="navigate">
+              <div class="type-card-icon">🌐</div>
+              <div class="type-card-text">
+                <div class="type-card-name">Buka Halaman</div>
+                <div class="type-card-desc">Pergi ke URL / halaman tertentu</div>
+              </div>
+            </button>
+            <button class="type-card" data-type="click_button">
+              <div class="type-card-icon">👆</div>
+              <div class="type-card-text">
+                <div class="type-card-name">Klik per Teks</div>
+                <div class="type-card-desc">Klik tombol berdasarkan teks yang terlihat, tanpa selector</div>
+              </div>
+            </button>
+            <button class="type-card" data-type="wait_button">
+              <div class="type-card-icon">⏳</div>
+              <div class="type-card-text">
+                <div class="type-card-name">Tunggu Tombol</div>
+                <div class="type-card-desc">Tunggu sampai tombol dengan teks tertentu muncul</div>
+              </div>
+            </button>
+            <button class="type-card" data-type="scroll">
+              <div class="type-card-icon">📜</div>
+              <div class="type-card-text">
+                <div class="type-card-name">Scroll</div>
+                <div class="type-card-desc">Gulir halaman ke bawah atau ke elemen tertentu</div>
+              </div>
+            </button>
+            <button class="type-card" data-type="wait">
+              <div class="type-card-icon">⏳</div>
+              <div class="type-card-text">
+                <div class="type-card-name">Tunggu</div>
+                <div class="type-card-desc">Jeda sebentar sebelum lanjut ke step berikutnya</div>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="fLabel">
+            <span class="step-badge-num">2</span>
+            Nama Step
+            <span class="field-required">*</span>
+          </label>
+          <input class="field-input" id="fLabel" type="text"
+            placeholder="Contoh: Klik tombol Daftar, Isi kolom NIK, dll."
+            autocomplete="off">
+          <span class="field-help">Nama ini hanya untuk memudahkan Anda mengenali step ini.</span>
+        </div>
+
+        <div class="field-group" id="fgSelector">
+          <label class="field-label" for="fSelector">
+            <span class="step-badge-num">3</span>
+            Target Elemen <span class="field-hint">*(diisi otomatis)*</span>
+            <span class="field-required">*</span>
+          </label>
+          <div class="selector-row">
+            <input class="field-input mono" id="fSelector" type="text"
+              placeholder="Klik '+ Pilih dari Halaman' untuk mengisi otomatis"
+              autocomplete="off">
+            <button class="btn-pick-element" id="btnPickElement" type="button" title="Pilih elemen dari halaman web aktif">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              + Pilih dari Halaman
+            </button>
+          </div>
+          <span class="field-help" id="selectorHelp">
+            💡 Kode penanda elemen di halaman web. Klik tombol di atas untuk mengisi otomatis.
+          </span>
+        </div>
+
+        <div class="field-group" id="fgValue">
+          <label class="field-label" for="fValue">
+            <span class="step-badge-num" id="valueStepNum">4</span>
+            <span id="valueLabelText">Isi / Nilai</span>
+          </label>
+          <input class="field-input" id="fValue" type="text" placeholder="" autocomplete="off">
+          <span class="field-help" id="valueHelpText">—</span>
+        </div>
+
+        <div class="field-group" id="fgExcel">
+          <label class="field-label" for="fExcelCol">
+            <span class="step-badge-num" id="excelStepNum">5</span>
+            Ambil Data dari Excel
+          </label>
+          <select class="field-select" id="fExcelCol">
+            <option value="">— Tidak pakai Excel (isi manual di atas) —</option>
+            <optgroup label="Data Pasien">
+              <option value="NIK">NIK — Nomor Induk Kependudukan</option>
+              <option value="Nama">Nama — Nama lengkap pasien</option>
+              <option value="TTL">TTL — Tanggal lahir</option>
+              <option value="Jenis_Kelamin">Jenis_Kelamin — L / P</option>
+              <option value="No_WA">No_WA — Nomor WhatsApp</option>
+              <option value="Pekerjaan">Pekerjaan</option>
+              <option value="Status_Nikah">Status_Nikah</option>
+            </optgroup>
+            <optgroup label="Alamat">
+              <option value="Alamat">Alamat — Jalan / RT / RW</option>
+              <option value="Provinsi">Provinsi</option>
+              <option value="Kabupaten">Kabupaten / Kota</option>
+              <option value="Kecamatan">Kecamatan</option>
+              <option value="Kelurahan">Kelurahan / Desa</option>
+            </optgroup>
+            <optgroup label="Pemeriksaan">
+              <option value="BB">BB — Berat Badan (kg)</option>
+              <option value="TB">TB — Tinggi Badan (cm)</option>
+              <option value="GDS">GDS — Gula Darah Sewaktu</option>
+              <option value="TD_Sistolik">TD_Sistolik — Tekanan Darah Atas</option>
+              <option value="TD_Diastolik">TD_Diastolik — Tekanan Darah Bawah</option>
+              <option value="Diagnosa">Diagnosa</option>
+            </optgroup>
+            <optgroup label="Lainnya">
+              <option value="Tanggal_Periksa">Tanggal_Periksa</option>
+              <option value="No_Antrian">No_Antrian</option>
+            </optgroup>
+          </select>
+          <span class="field-help">
+            💡 Jika dipilih, nilai akan diambil otomatis dari file Excel saat proses berjalan.
+          </span>
+        </div>
+
+        <div class="field-group">
+          <button class="adv-toggle" id="advToggle" type="button">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+            Pengaturan Lanjutan
+            <svg class="adv-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="adv-body hidden" id="advBody">
+            <div class="field-group" id="fgCondition">
+              <label class="field-label" for="fCondition">Kondisi (opsional)</label>
+              <input class="field-input mono" id="fCondition" type="text"
+                placeholder='Contoh: {"field":"Diagnosa","contains":"DM"}' autocomplete="off">
+              <span class="field-help">
+                Step ini hanya dijalankan jika kondisi terpenuhi. Format JSON.
+              </span>
+            </div>
+            <div class="field-row">
+              <div class="field-group flex-1">
+                <label class="field-label" for="fMaxRetry">Maks. Percobaan Ulang</label>
+                <input class="field-input" id="fMaxRetry" type="number" value="3" min="0" max="10">
+                <span class="field-help">Berapa kali dicoba ulang jika elemen belum muncul.</span>
+              </div>
+              <div class="field-group flex-1">
+                <label class="field-label" for="fWaitMs">Jeda (ms)</label>
+                <input class="field-input" id="fWaitMs" type="number" value="1500" min="100" step="100">
+                <span class="field-help">Waktu tunggu antar percobaan (1000 = 1 detik).</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="btnCancelModal">Batal</button>
+        <button class="btn btn-primary" id="btnSaveStep">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          Simpan Step
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add/Edit Workflow Modal -->
+  <div class="modal-backdrop hidden" id="wfModalBackdrop">
+    <div class="modal modal-sm" id="wfModal">
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title" id="wfModalTitle">Tambah Workflow Baru</h2>
+          <p class="modal-subtitle">Buat kategori langkah otomasi baru</p>
+        </div>
+        <button class="modal-close" id="wfModalClose">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="field-group">
+          <label class="field-label" for="wfDisplayName">
+            Nama Workflow
+            <span class="field-required">*</span>
+          </label>
+          <input class="field-input" id="wfDisplayName" type="text"
+            placeholder="Contoh: Skrining, Rujukan, Farmasi, Kasir"
+            autocomplete="off" maxlength="40">
+          <span class="field-help">Nama yang tampil di sidebar. Bebas menggunakan spasi.</span>
+        </div>
+        <div class="field-group" id="wfKeyGroup">
+          <label class="field-label" for="wfKey">
+            ID Workflow
+            <span class="field-required">*</span>
+          </label>
+          <input class="field-input mono" id="wfKey" type="text"
+            placeholder="Contoh: skrining, rujukan, farmasi"
+            autocomplete="off" maxlength="30">
+          <span class="field-help">
+            Huruf kecil, tanpa spasi, tanpa karakter spesial. Digunakan sebagai kunci penyimpanan.
+            <br>Diisi otomatis saat Anda mengetik nama di atas.
+          </span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="wfModalCancel">Batal</button>
+        <button class="btn btn-primary" id="wfModalSave">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          <span id="wfModalSaveLabel">Buat Workflow</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JSON Preview Modal -->
+  <div class="modal-backdrop hidden" id="jsonBackdrop">
+    <div class="modal modal-wide" id="jsonModal">
+      <div class="modal-header">
+        <h2 class="modal-title">Preview JSON — <span id="jsonModalWf">pendaftaran</span></h2>
+        <button class="modal-close" id="jsonModalClose">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre class="json-preview" id="jsonPreview"></pre>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="btnCopyJSON">Copy</button>
+        <button class="btn btn-primary" id="btnDownloadJSON">Download</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="options.js" type="module"></script>
+</body>
+</html>

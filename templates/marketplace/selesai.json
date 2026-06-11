@@ -1,0 +1,20 @@
+{
+  "meta": {
+    "name": "selesai",
+    "displayName": "Selesaikan Layanan",
+    "description": "Klik tombol Selesaikan Layanan dan konfirmasi modal untuk menyelesaikan sesi CKG pasien",
+    "icon": "🏁",
+    "tags": ["selesai", "layanan", "konfirmasi"],
+    "targetUrl": "https://sehatindonesiaku.kemkes.go.id/ckg-pelayanan/detail-pemeriksaan",
+    "version": "2.0.0",
+    "updatedAt": "2026-06-08",
+    "author": "KlikPro Official",
+    "excelColumns": []
+  },
+  "steps": [
+    { "type": "wait", "label": "Tunggu halaman detail pemeriksaan", "selector": "div.w-full.mb-25", "value": "8000", "recovery": { "maxRetry": 3, "waitMs": 1500 } },
+    { "type": "click_button", "label": "Klik Selesaikan Layanan", "buttonText": "Selesaikan Layanan", "recovery": { "maxRetry": 3, "waitMs": 1500 } },
+    { "type": "wait_button", "label": "Tunggu modal konfirmasi (tombol Ya)", "buttonText": "Ya", "recovery": { "maxRetry": 3, "waitMs": 1500 } },
+    { "type": "click_button", "label": "Klik Konfirmasi di modal", "buttonText": "Ya", "recovery": { "maxRetry": 3, "waitMs": 1500 } }
+  ]
+}

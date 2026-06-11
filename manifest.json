@@ -1,0 +1,100 @@
+{
+  "manifest_version": 3,
+  "name": "CKG Auto KlikPro Pro",
+  "version": "2.0.0",
+  "description": "Otomatisasi input data CKG SATUSEHAT — Schema-driven, self-healing, audit-logged. by KlikPro",
+
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "tabs",
+    "alarms",
+    "windows"
+  ],
+
+  "host_permissions": [
+    "https://sehatindonesiaku.kemkes.go.id/*",
+    "<all_urls>"
+  ],
+
+  "background": {
+    "service_worker": "src/background.js",
+    "type": "module"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["https://sehatindonesiaku.kemkes.go.id/*"],
+      "js": ["src/content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+
+  "action": {
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "popup.html",
+        "popup.js",
+        "popup.css",
+        "src/lib/xlsx.min.js",
+        "src/lib/storage.js",
+        "src/lib/column_config.js",
+        "src/engine/executor.js",
+        "src/engine/executor_inject.js",
+        "src/engine/schema_discovery.js",
+        "src/engine/schema_compare.js",
+        "src/engine/schema_autofill.js",
+        "src/engine/unknown_detector.js",
+        "src/engine/audit_log.js",
+        "src/ui/popup_main.js",
+        "src/ui/popup_log.js",
+        "src/ui/popup_setting.js",
+        "src/ui/popup_overlay.js",
+        "src/ui/popup_builder.js",
+        "src/ui/popup_builder_quiz.js",
+        "src/logic/quiz_rules.js",
+        "src/logic/field_mapper.js",
+        "src/adapters/excel.js",
+        "src/adapters/csv.js",
+        "src/adapters/manual.js",
+        "src/adapters/rme.js",
+        "src/adapters/satusehat.js",
+        "src/recorder.js",
+        "src/element_picker.js"
+      ],
+      "matches": ["<all_urls>"]
+    },
+    {
+      "resources": ["templates/*.json"],
+      "matches": ["<all_urls>"]
+    },
+    {
+      "resources": ["templates/marketplace/*.json"],
+      "matches": ["<all_urls>"]
+    },
+    {
+      "resources": ["schemas/*.json"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "meta": {
+    "name": "konfirmasi",
+    "displayName": "Konfirmasi Hadir",
+    "description": "Otomasi konfirmasi kehadiran pasien yang sudah terdaftar di daftar antrian",
+    "icon": "✅",
+    "tags": ["konfirmasi", "hadir", "antrian"],
+    "targetUrl": "https://sehatindonesiaku.kemkes.go.id/ckg-pendaftaran-individu",
+    "version": "2.0.0",
+    "updatedAt": "2026-06-08",
+    "author": "KlikPro Official",
+    "excelColumns": ["Nama"]
+  },
+  "steps": [
+    { "type": "navigate", "label": "Buka halaman Pendaftaran Individu", "value": "https://sehatindonesiaku.kemkes.go.id/ckg-pendaftaran-individu", "recovery": { "maxRetry": 3, "waitMs": 1500 } },
+    { "type": "wait", "label": "Tunggu tabel pasien muncul", "selector": "table.w-full.border-collapse tbody", "value": "8000", "recovery": { "maxRetry": 3, "waitMs": 1500 } },
+    { "type": "click_row_by_name", "label": "Klik Konfirmasi Hadir pada baris pasien", "buttonText": "Konfirmasi Hadir", "excelColumn": "Nama", "recovery": { "maxRetry": 3, "waitMs": 1500 } },
+    { "type": "click", "label": "Centang checkbox verifikasi", "selector": "div#verify", "recovery": { "maxRetry": 3, "waitMs": 1500 } },
+    { "type": "wait_button", "label": "Tunggu tombol Hadir", "buttonText": "Hadir", "recovery": { "maxRetry": 3, "waitMs": 1500 } },
+    { "type": "click_button", "label": "Klik tombol Hadir", "buttonText": "Hadir", "recovery": { "maxRetry": 3, "waitMs": 1500 } },
+    { "type": "wait_button", "label": "Tunggu tombol Tutup modal", "buttonText": "Tutup", "recovery": { "maxRetry": 3, "waitMs": 1500 } },
+    { "type": "click_button", "label": "Klik Tutup modal", "buttonText": "Tutup", "recovery": { "maxRetry": 3, "waitMs": 1500 } }
+  ]
+}

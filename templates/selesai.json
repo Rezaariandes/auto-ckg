@@ -1,0 +1,37 @@
+{
+  "meta": {
+    "name": "selesai",
+    "displayName": "Selesaikan Layanan",
+    "targetUrl": "https://sehatindonesiaku.kemkes.go.id/ckg-pelayanan/detail-pemeriksaan",
+    "version": "2.0.0",
+    "updatedAt": "2026-06-08",
+    "changelog": "v2.0 - Hapus xpath rapuh, pakai click_button/wait_button"
+  },
+  "steps": [
+    {
+      "type": "wait",
+      "label": "Tunggu halaman detail pemeriksaan",
+      "selector": "div.w-full.mb-25",
+      "value": "8000",
+      "recovery": { "maxRetry": 3, "waitMs": 1500 }
+    },
+    {
+      "type": "click_button",
+      "label": "Klik Selesaikan Layanan",
+      "buttonText": "Selesaikan Layanan",
+      "recovery": { "maxRetry": 3, "waitMs": 1500 }
+    },
+    {
+      "type": "wait_button",
+      "label": "Tunggu modal konfirmasi (tombol Ya/Konfirmasi)",
+      "buttonText": "Ya",
+      "recovery": { "maxRetry": 3, "waitMs": 1500 }
+    },
+    {
+      "type": "click_button",
+      "label": "Klik Konfirmasi di modal",
+      "buttonText": "Ya",
+      "recovery": { "maxRetry": 3, "waitMs": 1500 }
+    }
+  ]
+}

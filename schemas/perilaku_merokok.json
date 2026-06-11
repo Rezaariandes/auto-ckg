@@ -1,0 +1,38 @@
+{
+  "screen": "perilaku_merokok",
+  "title": "Perilaku Merokok",
+  "version": 1,
+  "generatedAt": "2026-06-10T00:00:00.000Z",
+  "fingerprint": "",
+  "questions": [
+    {
+      "question": "Apakah Anda merokok dalam setahun terakhir ini?",
+      "type": "radio",
+      "options": [
+        { "id": "sq_100i_0", "value": "PPV00000364", "label": "Ya" },
+        { "id": "sq_100i_1", "value": "PPV00000365", "label": "Tidak" }
+      ]
+    },
+    {
+      "question": "Jika perokok, jenis rokok apa yang dikonsumsi?",
+      "type": "radio",
+      "options": [
+        { "id": "sq_101i_0", "value": "PPV00000642", "label": "Rokok konvensional" },
+        { "id": "sq_101i_1", "value": "PPV00000643", "label": "Rokok elektrik / vape" },
+        { "id": "sq_101i_2", "value": "PPV00000644", "label": "Keduanya" }
+      ]
+    },
+    {
+      "question": "Sudah berapa tahun Anda merokok?",
+      "type": "number",
+      "id": "sq_102i",
+      "placeholder": ""
+    },
+    {
+      "question": "Biasanya, berapa batang rokok yang Anda hisap dalam sehari?",
+      "type": "number",
+      "id": "sq_103i",
+      "placeholder": ""
+    }
+  ]
+}

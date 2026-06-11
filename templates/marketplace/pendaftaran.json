@@ -1,0 +1,42 @@
+{
+  "meta": {
+    "name": "pendaftaran",
+    "displayName": "Pendaftaran Baru",
+    "description": "Otomasi daftar pasien baru lengkap: NIK, nama, TTL, jenis kelamin, alamat, faskes",
+    "icon": "👤",
+    "tags": ["pendaftaran", "pasien baru"],
+    "targetUrl": "https://sehatindonesiaku.kemkes.go.id/ckg-pendaftaran-individu",
+    "version": "2.0.0",
+    "updatedAt": "2026-06-08",
+    "author": "KlikPro Official",
+    "excelColumns": ["NIK","Nama","TTL","Jenis_Kelamin","No_WA","Status_Nikah","Pekerjaan","Alamat","Provinsi","Kabupaten","Kecamatan","Kelurahan","No_Antrian"]
+  },
+  "steps": [
+    { "type": "navigate", "label": "Buka halaman Pendaftaran Individu", "value": "https://sehatindonesiaku.kemkes.go.id/ckg-pendaftaran-individu", "recovery": { "maxRetry": 3, "waitMs": 1500 } },
+    { "type": "wait_button", "label": "Tunggu tombol Daftar Baru", "buttonText": "Daftar Baru", "recovery": { "maxRetry": 5, "waitMs": 2000 } },
+    { "type": "click_button", "label": "Klik Daftar Baru", "buttonText": "Daftar Baru", "recovery": { "maxRetry": 3, "waitMs": 1500 } },
+    { "type": "wait", "label": "Tunggu input NIK", "selector": "input[placeholder='Masukkan NIK']", "value": "8000", "recovery": { "maxRetry": 5, "waitMs": 1000 } },
+    { "type": "type", "label": "Isi NIK dari Excel", "selector": "input[placeholder='Masukkan NIK']", "excelColumn": "NIK", "recovery": { "maxRetry": 3, "waitMs": 1500 } },
+    { "type": "click_button", "label": "Klik Cek NIK", "buttonText": "Cek NIK", "recovery": { "maxRetry": 3, "waitMs": 1500 } },
+    { "type": "wait", "label": "Tunggu input Nama muncul", "selector": "input[placeholder='Masukkan nama lengkap']", "value": "8000", "recovery": { "maxRetry": 3, "waitMs": 1500 } },
+    { "type": "type", "label": "Isi Nama dari Excel", "selector": "input[placeholder='Masukkan nama lengkap']", "excelColumn": "Nama", "recovery": { "maxRetry": 3, "waitMs": 1500 } },
+    { "type": "date_picker", "label": "Pilih Tanggal Lahir", "selector": "div.mx-datepicker, .mx-datepicker", "excelColumn": "TTL", "recovery": { "maxRetry": 3, "waitMs": 1500 } },
+    { "type": "select_dropdown", "label": "Pilih Jenis Kelamin", "selector": "div", "placeholder": "Pilih jenis kelamin", "excelColumn": "Jenis_Kelamin", "recovery": { "maxRetry": 3, "waitMs": 1500 } },
+    { "type": "type", "label": "Isi Nomor WhatsApp", "selector": "input[placeholder='Masukkan nomor whatsapp']", "excelColumn": "No_WA", "recovery": { "maxRetry": 3, "waitMs": 1500 } },
+    { "type": "select_antrian", "label": "Pilih nomor antrian/slot tanggal", "selector": "button", "excelColumn": "No_Antrian", "recovery": { "maxRetry": 3, "waitMs": 1500 } },
+    { "type": "click_button", "label": "Klik Selanjutnya (step 1)", "buttonText": "Selanjutnya", "recovery": { "maxRetry": 3, "waitMs": 1500 } },
+    { "type": "wait", "label": "Tunggu halaman step 2", "selector": "div", "value": "5000", "recovery": { "maxRetry": 3, "waitMs": 1500 } },
+    { "type": "click_button", "label": "Klik Lanjutkan jika ada (skip wali)", "buttonText": "Lanjutkan", "condition": { "ifVisible": true }, "recovery": { "maxRetry": 2, "waitMs": 1000 } },
+    { "type": "select_dropdown", "label": "Pilih Status Pernikahan", "selector": "div", "placeholder": "Pilih status pernikahan", "excelColumn": "Status_Nikah", "recovery": { "maxRetry": 3, "waitMs": 1500 } },
+    { "type": "select_dropdown", "label": "Pilih Penyandang Disabilitas", "selector": "div", "placeholder": "Tidak memiliki disabilitas", "value": "Tidak memiliki disabilitas", "recovery": { "maxRetry": 3, "waitMs": 1500 } },
+    { "type": "select_pekerjaan", "label": "Pilih Pekerjaan", "selector": "div", "placeholder": "Pilih pekerjaan", "excelColumn": "Pekerjaan", "recovery": { "maxRetry": 3, "waitMs": 1500 } },
+    { "type": "select_alamat", "label": "Pilih Alamat Domisili", "selector": "div", "excelColumn": "__alamat_bundle__", "recovery": { "maxRetry": 3, "waitMs": 1500 } },
+    { "type": "type", "label": "Isi Alamat Detail", "selector": "textarea[placeholder='Cth: Jl. Kenanga 14 no 92']", "excelColumn": "Alamat", "recovery": { "maxRetry": 3, "waitMs": 1500 } },
+    { "type": "click_button", "label": "Klik Selanjutnya (step 2)", "buttonText": "Selanjutnya", "recovery": { "maxRetry": 3, "waitMs": 1500 } },
+    { "type": "wait_button", "label": "Tunggu tombol Pilih (konfirmasi faskes)", "buttonText": "Pilih", "recovery": { "maxRetry": 3, "waitMs": 1500 } },
+    { "type": "click_button", "label": "Klik Pilih (konfirmasi faskes)", "buttonText": "Pilih", "recovery": { "maxRetry": 3, "waitMs": 1500 } },
+    { "type": "click_button", "label": "Klik Daftarkan dengan NIK", "buttonText": "Daftarkan dengan NIK", "recovery": { "maxRetry": 3, "waitMs": 1500 } },
+    { "type": "wait_button", "label": "Tunggu modal sukses (tombol Tutup)", "buttonText": "Tutup", "recovery": { "maxRetry": 5, "waitMs": 2000 } },
+    { "type": "click_button", "label": "Klik Tutup modal sukses", "buttonText": "Tutup", "recovery": { "maxRetry": 3, "waitMs": 1500 } }
+  ]
+}

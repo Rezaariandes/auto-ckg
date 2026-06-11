@@ -1,0 +1,22 @@
+{
+  "meta": {
+    "name": "lengkap",
+    "displayName": "Bundle Lengkap CKG",
+    "description": "Paket komplit: Pendaftaran → Konfirmasi → Kuesioner → Pemeriksaan → Selesai. Cocok untuk satu sesi penuh.",
+    "icon": "📦",
+    "tags": ["lengkap", "bundle", "semua", "satu sesi"],
+    "version": "2.0.0",
+    "updatedAt": "2026-06-08",
+    "author": "KlikPro Official",
+    "excelColumns": ["NIK","Nama","TTL","Jenis_Kelamin","No_WA","Status_Nikah","Pekerjaan","Alamat","Provinsi","Kabupaten","Kecamatan","Kelurahan","No_Antrian","BB","TB","GDS","TD_Sistolik","TD_Diastolik"],
+    "bundle": true,
+    "includes": ["pendaftaran","konfirmasi","kuesioner","pemeriksaan","selesai"]
+  },
+  "workflows": {
+    "pendaftaran": "marketplace/pendaftaran.json",
+    "konfirmasi":  "marketplace/konfirmasi.json",
+    "kuesioner":   "marketplace/kuesioner.json",
+    "pemeriksaan": "marketplace/pemeriksaan.json",
+    "selesai":     "marketplace/selesai.json"
+  }
+}

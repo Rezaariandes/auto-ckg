@@ -1,0 +1,77 @@
+{
+  "meta": {
+    "name": "kuesioner",
+    "displayName": "Isi Kuesioner",
+    "targetUrl": "https://sehatindonesiaku.kemkes.go.id/ckg-pelayanan",
+    "version": "2.0.0",
+    "updatedAt": "2026-06-08",
+    "changelog": "v2.0 - Pakai click_button/wait_button"
+  },
+  "steps": [
+    {
+      "type": "navigate",
+      "label": "Buka halaman Pelayanan CKG",
+      "value": "https://sehatindonesiaku.kemkes.go.id/ckg-pelayanan",
+      "recovery": { "maxRetry": 3, "waitMs": 1500 }
+    },
+    {
+      "type": "click",
+      "label": "Klik menu CKG Umum",
+      "selector": "span",
+      "placeholder": "CKG Umum",
+      "recovery": { "maxRetry": 3, "waitMs": 1500 }
+    },
+    {
+      "type": "click",
+      "label": "Klik sub-menu Pelayanan",
+      "selector": "div",
+      "placeholder": "Pelayanan",
+      "recovery": { "maxRetry": 3, "waitMs": 1500 }
+    },
+    {
+      "type": "type",
+      "label": "Cari nama pasien",
+      "selector": "input[placeholder='Masukkan nama']",
+      "excelColumn": "Nama",
+      "recovery": { "maxRetry": 3, "waitMs": 1500 }
+    },
+    {
+      "type": "wait",
+      "label": "Tunggu hasil pencarian",
+      "selector": "div",
+      "placeholder": "Sedang Pemeriksaan",
+      "value": "2000",
+      "recovery": { "maxRetry": 3, "waitMs": 1500 }
+    },
+    {
+      "type": "click_button",
+      "label": "Klik Mulai pada pasien",
+      "buttonText": "Mulai",
+      "recovery": { "maxRetry": 3, "waitMs": 1500 }
+    },
+    {
+      "type": "wait_button",
+      "label": "Tunggu tombol Mulai Pemeriksaan",
+      "buttonText": "Mulai Pemeriksaan",
+      "recovery": { "maxRetry": 3, "waitMs": 1500 }
+    },
+    {
+      "type": "click_button",
+      "label": "Klik Mulai Pemeriksaan",
+      "buttonText": "Mulai Pemeriksaan",
+      "recovery": { "maxRetry": 3, "waitMs": 1500 }
+    },
+    {
+      "type": "quiz_section",
+      "label": "Isi semua section kuesioner",
+      "description": "Engine deteksi tiap section kuesioner, lookup jawaban dari quiz_rules, isi dan simpan",
+      "recovery": { "maxRetry": 3, "waitMs": 1500 }
+    },
+    {
+      "type": "click_button",
+      "label": "Kembali ke Halaman Utama",
+      "buttonText": "Kembali ke Halaman Utama",
+      "recovery": { "maxRetry": 3, "waitMs": 1500 }
+    }
+  ]
+}

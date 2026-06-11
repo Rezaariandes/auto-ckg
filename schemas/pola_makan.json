@@ -1,0 +1,53 @@
+{
+  "screen": "pola_makan",
+  "title": "Skrining Pola Makan",
+  "version": 1,
+  "generatedAt": "2026-06-10T00:00:00.000Z",
+  "fingerprint": "",
+  "questions": [
+    {
+      "question": "Berapa kali Anda makan dalam sehari?",
+      "type": "radio",
+      "options": [
+        { "id": "", "value": "", "label": "1 kali" },
+        { "id": "", "value": "", "label": "2 kali" },
+        { "id": "", "value": "", "label": "3 kali" },
+        { "id": "", "value": "", "label": "> 3 kali" }
+      ]
+    },
+    {
+      "question": "Apakah Anda mengonsumsi sayur dan buah setiap hari?",
+      "type": "radio",
+      "options": [
+        { "id": "", "value": "", "label": "Ya, setiap hari" },
+        { "id": "", "value": "", "label": "Kadang-kadang" },
+        { "id": "", "value": "", "label": "Tidak pernah" }
+      ]
+    },
+    {
+      "question": "Apakah Anda sering mengonsumsi makanan berlemak / gorengan?",
+      "type": "radio",
+      "options": [
+        { "id": "", "value": "", "label": "Ya, setiap hari" },
+        { "id": "", "value": "", "label": "Kadang-kadang" },
+        { "id": "", "value": "", "label": "Tidak pernah" }
+      ]
+    },
+    {
+      "question": "Apakah Anda sering mengonsumsi makanan asin / tinggi garam?",
+      "type": "radio",
+      "options": [
+        { "id": "", "value": "", "label": "Ya, setiap hari" },
+        { "id": "", "value": "", "label": "Kadang-kadang" },
+        { "id": "", "value": "", "label": "Tidak pernah" }
+      ]
+    },
+    {
+      "question": "Berapa gelas air putih yang Anda minum dalam sehari?",
+      "type": "number",
+      "id": "",
+      "placeholder": "gelas"
+    }
+  ],
+  "_note": "PPV values perlu di-update via Developer Mode → Extract Current Schema saat form live dibuka."
+}
