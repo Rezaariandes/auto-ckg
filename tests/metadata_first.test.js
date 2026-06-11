@@ -64,6 +64,42 @@ const HEPATITIS = {
     assert.strictEqual(rsd.mapType({ type: 'comment' }), 'textarea');
   });
 
+  // Di React runtime, element = instance Question: `type` undefined, tipe asli
+  // ada di getType()/jsonObj.type (lihat diagnostik form "Perilaku Merokok").
+  test('getElType fallback ke getType() lalu jsonObj.type saat type undefined', () => {
+    assert.strictEqual(rsd.getElType({ type: 'radiogroup' }), 'radiogroup');
+    assert.strictEqual(rsd.getElType({ getType: () => 'radiogroup' }), 'radiogroup');
+    assert.strictEqual(rsd.getElType({ jsonObj: { type: 'text' } }), 'text');
+    assert.strictEqual(rsd.getElType({}), '');
+  });
+
+  test('mapType membaca tipe dari instance Question (getType/jsonObj.type)', () => {
+    assert.strictEqual(rsd.mapType({ getType: () => 'radiogroup' }), 'radio');
+    assert.strictEqual(rsd.mapType({ getType: () => 'text', inputType: 'number' }), 'number');
+    assert.strictEqual(rsd.mapType({ jsonObj: { type: 'checkbox' } }), 'checkbox');
+  });
+
+  test('surveyToSchema membaca instance Question (type undefined) tanpa "unknown"', () => {
+    const survey = { pages: [{ elements: [
+      { getType: () => 'panel', name: 'pnl', elements: [
+        { getType: () => 'radiogroup', name: 'LPM000057|FRM000064|PPM00000183|text',
+          title: 'Apakah Anda merokok?', choices: [
+            { value: 'PPV00000364', text: 'Ya' }, { value: 'PPV00000365', text: 'Tidak' }] },
+      ] },
+      { getType: () => 'text', inputType: 'number', name: 'LPM000057|FRM000064|PPM00000184|number',
+        title: 'Berapa batang per hari?' },
+    ] }] };
+    const s = rsd.surveyToSchema(survey, {});
+    assert.strictEqual(s._form, 'FRM000064');
+    assert.strictEqual(s.questions.length, 2); // panel di-skip, nested element ikut
+    const radio = s.questions.find(q => q.code === 'PPM00000183');
+    const num = s.questions.find(q => q.code === 'PPM00000184');
+    assert.ok(radio && num, 'kedua pertanyaan terekstrak');
+    assert.strictEqual(radio.type, 'radio');
+    assert.strictEqual(radio.options[0].value, 'PPV00000364');
+    assert.strictEqual(num.type, 'number');
+  });
+
   test('surveyToSchema menghasilkan PPV + PPM dari metadata Hepatitis', () => {
     const s = rsd.surveyToSchema(HEPATITIS, {});
     assert.strictEqual(s._source, 'react-state');

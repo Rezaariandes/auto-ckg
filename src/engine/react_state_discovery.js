@@ -173,9 +173,21 @@
     return out;
   }
 
+  // ── Ambil tipe mentah element SurveyJS ─────────────────────────────────────
+  // Pada React runtime, element adalah instance Question: properti `type` sering
+  // `undefined`, tetapi `getType()` dan `jsonObj.type` mengembalikan tipe asli
+  // ("radiogroup"/"text"/"panel"/...). Raw JSON Form Builder tetap pakai `type`.
+  function getElType(el) {
+    if (!el) return '';
+    try { if (el.type) return String(el.type); } catch (_) {}
+    try { if (typeof el.getType === 'function') { var gt = el.getType(); if (gt) return String(gt); } } catch (_) {}
+    try { if (el.jsonObj && el.jsonObj.type) return String(el.jsonObj.type); } catch (_) {}
+    return '';
+  }
+
   // ── Normalisasi tipe SurveyJS → tipe internal Auto CKG ─────────────────────
   function mapType(el) {
-    var t = (el && el.type ? String(el.type) : '').toLowerCase();
+    var t = getElType(el).toLowerCase();
     switch (t) {
       case 'radiogroup': return 'radio';
       case 'checkbox':   return 'checkbox';
@@ -254,7 +266,8 @@
       var els = page.elements || page.questions || [];
       for (var e = 0; e < els.length; e++) {
         var el = els[e];
-        if (!el || el.type === 'panel' || el.type === 'html') {
+        var elType = getElType(el).toLowerCase();
+        if (!el || elType === 'panel' || elType === 'html') {
           // panel: bisa berisi nested elements
           if (el && Array.isArray(el.elements)) {
             els = els.concat(el.elements);
@@ -333,6 +346,7 @@
       surveyToSchema: surveyToSchema,
       parseQuestionName: parseQuestionName,
       mapType: mapType,
+      getElType: getElType,
       choiceLabel: choiceLabel,
       choiceValue: choiceValue,
       looksLikeSurvey: looksLikeSurvey,
