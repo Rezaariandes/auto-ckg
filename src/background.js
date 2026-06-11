@@ -3,6 +3,7 @@
 
 import { saveCheckpoint, loadCheckpoint, clearCheckpoint } from './engine/recovery.js';
 import { runQueue } from './engine/scheduler.js';
+import { MetadataRegistry } from './engine/metadata_registry.js';
 
 // ── Floating Overlay (inject ke halaman aktif) ─────────────────────────────
 
@@ -556,7 +557,40 @@ async function findSatusehatTab() {
   return allTabs.find(t => t.url && t.url.includes('sehatindonesiaku.kemkes.go.id')) || null;
 }
 
-// Extract schema from active SATUSEHAT tab
+/**
+ * Metadata-First extractor: baca Survey Model dari React runtime state.
+ * Dijalankan di MAIN world (properti React Fiber hanya terlihat di konteks
+ * halaman). Dua langkah: (1) inject modul → define window.__ckgExtractReactMetadata,
+ * (2) panggil fungsinya dan kembalikan hasil.
+ * @param {number} tabId
+ * @returns {Promise<{ok:boolean, schema?:Object, error?:string}>}
+ */
+async function extractReactMetadata(tabId) {
+  try {
+    await chrome.scripting.executeScript({
+      target: { tabId },
+      world:  'MAIN',
+      files:  ['src/engine/react_state_discovery.js'],
+    });
+  } catch (e) {
+    return { ok: false, error: 'inject react_state_discovery gagal: ' + e.message };
+  }
+
+  try {
+    const results = await chrome.scripting.executeScript({
+      target: { tabId },
+      world:  'MAIN',
+      func: () => (typeof window.__ckgExtractReactMetadata === 'function'
+        ? window.__ckgExtractReactMetadata()
+        : { ok: false, error: '__ckgExtractReactMetadata tidak tersedia' }),
+    });
+    return results?.[0]?.result || { ok: false, error: 'hasil metadata null' };
+  } catch (e) {
+    return { ok: false, error: 'panggil metadata gagal: ' + e.message };
+  }
+}
+
+// Extract schema from active SATUSEHAT tab — METADATA-FIRST, DOM sebagai fallback
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.action !== 'ckg_extract_schema') return;
 
@@ -568,22 +602,41 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         return;
       }
 
+      // ── PRIORITY 1: Metadata Form Builder dari React runtime state ──────────
+      const meta = await extractReactMetadata(tab.id);
+      if (meta?.ok && meta.schema?.questions?.length) {
+        try { await MetadataRegistry.upsertMetadata(meta.schema); } catch (_) {}
+        sendResponse({ ok: true, schema: meta.schema, source: 'react-state' });
+        return;
+      }
+
+      // ── PRIORITY 2 (fallback): DOM scraping (perilaku lama) ─────────────────
       const results = await chrome.scripting.executeScript({
         target: { tabId: tab.id },
         func: _contentExtractSchema,
       });
 
-      const schema = results?.[0]?.result;
+      let schema = results?.[0]?.result;
+
+      // Enrich schema DOM dengan PPV/PPM dari metadata terakhir yang diketahui
+      if (schema && schema.screen) {
+        try {
+          const lastMeta = await MetadataRegistry.getMetadata(schema.screen);
+          if (lastMeta) schema = MetadataRegistry.mergeMetaIntoDom(schema, lastMeta);
+        } catch (_) {}
+      }
+
       if (schema && schema.questions && schema.questions.length > 0) {
-        sendResponse({ ok: true, schema });
+        sendResponse({ ok: true, schema, source: schema._enrichedFromMeta ? 'dom+meta' : 'dom', metaError: meta?.error });
       } else if (schema) {
         sendResponse({
           ok: false,
           error: `Tidak ada pertanyaan ditemukan di halaman ini.\nURL: ${tab.url}\nTitle: ${tab.title}\n\nPastikan form kuesioner sudah terbuka sepenuhnya.`,
           schema, // kirim tetap, meski kosong
+          metaError: meta?.error,
         });
       } else {
-        sendResponse({ ok: false, error: 'Schema extraction gagal — hasil null' });
+        sendResponse({ ok: false, error: 'Schema extraction gagal — hasil null', metaError: meta?.error });
       }
     } catch (e) {
       sendResponse({ ok: false, error: e.message });
